@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Entity.Exam>
+
+@{
+    ViewBag.Title = "Sınavlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="row">
+        <div class="col-12"><h2>Sınavlar</h2></div>
+
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Başlık
+                    </th>
+                    <th>
+                        Tarih
+                    </th>
+                    <th>
+                        Sınav Giriş
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Article.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            <a href="~/Exam/StartExam/@item.ID">Sınava Başla</a>
+                        </td>
+                        <td>
+
+                            @Html.ActionLink("Sil", "Delete", new { id = item.ID })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+
+    </div>

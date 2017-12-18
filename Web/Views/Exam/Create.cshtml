@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Entity.Exam>
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+
+<div class="col-12 ">
+    <h2 id="header">Sınav Oluşturulacak Konuyu Şeçiniz</h2>
+    <div id="exam-panel">
+        <div id="title-list" class="list-group">
+
+            @if (ViewBag.RSSFeed != null)
+            {
+                foreach (var item in ViewBag.RSSFeed)
+                {
+                    <a data-title="@item.Title" class="list-group-item title-item">@item.Title</a>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+
+
+    $(".title-item").click(function () {
+
+        var a = $(this).data("title");
+        $(this).addClass("active");
+
+
+        $("#title-list").html($(this));
+        $.ajax({
+
+            type: "post",
+            url: '@Url.Action("GetExamCreateView", "Exam")',
+            data: { title: a },
+            datatype: "json",
+            success: function (data) {
+                if (data != null) {
+
+
+                   var temp = $("#exam-panel").html();
+                   var newDiv = temp + data;
+                   $("#exam-panel").html(newDiv);
+
+
+
+                }
+
+
+            },
+            error: function () {
+                alert("İşlem Sırasında Hata Oluştu");
+            }
+
+        });
+    });
+
+</script>
+
+

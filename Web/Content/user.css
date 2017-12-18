@@ -1,0 +1,39 @@
+#panel{
+  border-style:solid;
+  
+}
+
+#username{
+  width:100%;
+  border-style:solid;
+  border-radius:initial;
+}
+
+#password{
+  width:100%;
+  border-style:solid;
+  border-radius:initial;
+}
+
+#btn_login{
+  width:100%;
+  background-color:transparent;
+}
+
+.column{
+  margin-top:10px;
+  margin-bottom:5px;
+}
+.green{
+
+    background-color:greenyellow;
+}
+.red{
+
+    background-color:red;
+}
+.grey{
+    background-color:dimgrey;
+}
+
+

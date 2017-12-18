@@ -1,0 +1,134 @@
+﻿@model Entity.Exam
+
+<link href="~/Content/user.css" rel="stylesheet" />
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    @Html.Raw(ViewBag.Rss.Description);
+                </p>
+
+            </div>
+        </div>
+        @using (Html.BeginForm("Create", "Exam", FormMethod.Post, new { @class = "form-group" }))
+        {
+            for (var i = 0; i < 4; i++)
+            {
+                <div class="row">
+                    <input type="hidden" name="Exam.Article.Content" value="@ViewBag.Rss.Description" />
+                    <input type="hidden" name="Exam.Article.Title" value="@ViewBag.Rss.Title" />
+                    <div class="col-12 form-group">
+                        <div class="row form-group">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon" id="sizing-addon1">Soru @(i+1)</span>
+                                <input type="text" class="form-control" name="Exam.Questions[@i].Content" placeholder="Lütfen @(i+1) . soruyu giniz" aria-describedby="sizing-addon1" required="required">
+
+                               
+                            </div>
+                            
+                        </div>
+                        <div id="answers-@i">
+                            <div class="row form-group ">
+                                <div class="panel-answer-@i col-md-6  ">
+
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon" id="sizing-addon1">A)</span>
+                                        <input type="text" class="form-control" name="Exam.Questions[@i].Answers[0].Content" placeholder="Birinci cevabı giriniz " aria-describedby="sizing-addon1" required="required">
+
+                                        <input type="hidden" name="Exam.Questions[@i].Answers[0].IsRight" value="false" />
+                                    </div>
+
+                                </div>
+                                <div class="panel-answer-@i col-md-6">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon" id="sizing-addon1">B)</span>
+                                        <input type="text" class="form-control" name="Exam.Questions[@i].Answers[1].Content" placeholder="İkinci cevabı giriniz" aria-describedby="sizing-addon1" required="required">
+
+                                        <input type="hidden" name="Exam.Questions[@i].Answers[1].IsRight" value="false" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="panel-answer-@i col-md-6">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon" id="sizing-addon1">C)</span>
+                                        <input type="text" class="form-control" name="Exam.Questions[@i].Answers[2].Content" placeholder="Üçüncü cevabı giriniz" aria-describedby="sizing-addon1" required="required">
+
+                                        <input type="hidden" name="Exam.Questions[@i].Answers[2].IsRight" value="false" />
+                                    </div>
+                                </div>
+                                <div class="panel-answer-@i col-md-6">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon" id="sizing-addon1">D)</span>
+                                        <input type="text" class="form-control" name="Exam.Questions[@i].Answers[3].Content" placeholder="Dördüncü cevabı giriniz" aria-describedby="sizing-addon1" required="required">
+
+                                        <input type="hidden" name="Exam.Questions[@i].Answers[3].IsRight" value="false" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3"></div>
+                                <div class="col-md-6  ">
+                                    <button id="btn-@i" type="button" class="btn btn-block  ">Doğru Cevabı Seç</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+
+
+            <div class="row">
+                
+                    <button class="btn btn-block btn-lg btn-primary " type="submit">Sınavı Oluştur</button>
+
+               
+            </div>
+
+
+        }
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $.each(["0", "1", "2", "3"], function (i, value) {
+
+        $("#btn-" + value).click(function () {
+
+
+
+            $(".panel-answer-" + value).click(function () {
+                debugger;
+                $("#answers-" + value + " .green").removeClass("green");
+                $(this).addClass("green");
+              
+                $(this).find(":input").addClass("green");
+
+                $("#answers-" + value + " :hidden").val("false");
+
+                $(this).find(":hidden").val("true");
+
+                var label = $(this).find("#sizing-addon1").text();
+
+                $("#btn-" + value).text("Seçtiğiniz doğru cevap " + label.substring(0, 1))
+            });
+
+
+
+
+
+
+
+        });
+
+    })
+
+
+</script>

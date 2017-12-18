@@ -1,0 +1,200 @@
+﻿
+@model Entity.Exam
+@{
+    ViewBag.Title = "Sınav başladı";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/user.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-12 ">
+        <div class="row">
+            <div class="col-12">
+                <h2 id="header">Aşağıdaki soruları paragrafa göre cevaplandırınız</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a class="list-group-item alert-info">@ViewBag.RssTitle</a>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>
+                            @Html.Raw(ViewBag.RssContent)
+                        </p>
+
+                    </div>
+                </div>
+
+            
+                <form class="form-control" id="form" action="@Url.Action("FinishExam","Exam")" method="post">
+                    @Html.HiddenFor(x => x.ID)
+                    <div class="row form-group " id="panel-question">
+                        @for (var i = 0; i < 4; i++)
+                        {
+
+
+
+
+
+                            
+                            <div class="col-md-6 form-group">
+                   
+                                <div class="row form-group col-12 ">
+                                    <div class="input-group input-group-lg ">
+                                        <span class="input-group-addon" id="sizing-addon1">Soru @(i + 1)</span>
+                                        @Html.TextBoxFor(x => x.Questions[i].Content, new { @class = "form-control", @readonly = "readonly" })
+
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row " id="answers-@i">
+
+                                   @{ List<string> a = new List<string>(){ "A", "B", "C", "D" };
+                                       }
+                                       @for (int k = 0; k < 4; k++)
+                                    {
+                                        @Html.HiddenFor(x => x.Questions[i].Answers[k].ID, new { @id = "id-"+k })
+                                        <div class="panel-answer-@i col-12 form-group ">
+
+                                            <div class="input-group input-group-sm cevap-@k">
+                                                <span class="input-group-addon" id="sizing-addon1">@a[k])</span>
+                                                @Html.TextBoxFor(x => x.Questions[i].Answers[k].Content, new { @class = "form-control", @readonly = "readonly", @required = "required" })
+                                                @Html.HiddenFor(x => x.Questions[i].Answers[k].IsRight, new { @id = "IsRight-" + i })
+                                               
+
+                                            </div>
+
+                                        </div>
+                                    }
+                                    
+                                    
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+                        }
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-block btn-lg btn-primary " id="btn-complete" type="button">Sınavı Tamamla</button>
+
+
+                    </div>
+                </form>
+
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    
+            
+    
+    function hiddenFalseByID(id) {
+        $.each(["0", "1", "2", "3"], function (i, deger) {
+            $(".panel-answer-" + id).find(".cevap-" + deger).find("#IsRight-" + id).val("false");
+        });
+    }
+    $.each(["0", "1", "2", "3"], function (i, value) {
+        $.each(["0", "1", "2", "3"], function (i, deger) {
+            $(".panel-answer-" + value).find(".cevap-" + deger).find("#IsRight-" + value).val("false");
+        
+        $(".panel-answer-" + value).click(function () {
+            debugger
+            hiddenFalseByID(value);
+            $("#answers-" + value).find(".grey").removeClass("grey");
+            $(this).addClass("grey");
+            $(".panel-answer-" + value).find(".cevap-" + deger).find("#IsRight-" + value).val("false");
+
+
+           
+
+            $(this).find(":hidden").val("true");
+
+            return false;
+        });
+        });
+    });
+    $("#btn-complete").click(function () {
+        if ($(this).text() == "Sınavı Tamamla") {
+            $(this).text("Sınav Bitti - Anasayfa ya dönmek için tıkla");
+            $.each(["0", "1", "2", "3"], function (i, value) {
+
+                $(".panel-answer-" + value).removeClass("grey");
+
+                $.each(["0", "1", "2", "3"], function (k, deger) {
+                    debugger
+                    var isRight = $(".panel-answer-" + value).find(".cevap-"+deger).find("#IsRight-"+value).val()
+                    var id = $("#answers-" + value).find("#id-"+deger).val();
+                    if (isRight=="true") {
+
+                        $.ajax({
+
+                            type: "post",
+                            url: '@Url.Action("CheckAnswer", "Exam")',
+                            data: { id: id, IsRight:isRight},
+                            datatype: "json",
+                            success: function (data) {
+                                if (data != null) {
+                                    if (data == "true") {
+                                        debugger
+                            
+                                        var isRight = $(".panel-answer-" + value).find(".cevap-" + deger).parent().addClass("green");
+                               
+                                    }
+                                    if (data == "false") {
+                                        debugger
+                         
+                                        var isRight = $(".panel-answer-" + value).find(".cevap-" + deger).parent().addClass("red");
+                            
+                                    }
+
+                                }
+
+
+                            },
+                            error: function () {
+                                alert("İşlem Sırasında Hata Oluştu");
+                            }
+
+                        });
+
+                    }
+
+                });
+         
+
+            });
+        
+        } else {
+            window.location = '@Url.Action("Index", "Exam")';
+        }
+    });
+
+              
+  
+        
+
+
+
+
+
+
+</script>
