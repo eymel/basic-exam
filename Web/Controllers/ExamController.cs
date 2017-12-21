@@ -132,7 +132,7 @@ namespace Web.Controllers
           bool result= examBll.Delete(ID);
             if (result)
             {
-                return RedirectToAction("List","Exam");
+                return RedirectToAction("Index","Exam");
             }
             return null;
 
